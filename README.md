@@ -47,18 +47,6 @@ Este paquete de ROS 2 permite controlar una tortuga en el simulador **Turtlesim*
 - **Mediante las flechas del teclado** (control manual en tiempo real).
 - **Mediante letras específicas** que ejecutan trayectorias predefinidas para dibujar las letras **M**, **A**, **H**, **J** y **D**.
 
-## Instalación
-
-Clona el repositorio dentro de tu `workspace/src` y compílalo:
-
-```bash
-cd ~/ros2_ws/src
-git clone <url_del_repositorio>
-cd ~/ros2_ws
-colcon build
-source install/setup.bash
-```
-
 ## Estructura del Paquete
 
 ```
@@ -70,6 +58,18 @@ my_turtle_controller/
 ├── setup.py                  # Configuración del paquete
 ├── package.xml               # Información del paquete para ROS
 └── README.md                 # Documentación del proyecto
+```
+
+## Instalación
+
+Clona el repositorio dentro de tu `workspace/src` y compílalo:
+
+```bash
+cd ~/ros2_ws/src
+git clone <url_del_repositorio>
+cd ~/ros2_ws
+colcon build
+source install/setup.bash
 ```
 
 ## Ejecución
