@@ -35,15 +35,6 @@ El objetivo principal fue desarrollar un único script que gestionara completame
 
 ---
 
-## Decisiones de diseño
-
-- Se usó programación multihilo para leer el teclado sin bloquear el nodo ROS (`threading.Thread`).
-- Se emplearon configuraciones de terminal (`termios`, `tty`) para capturar pulsaciones individuales del teclado.
-- Se diseñaron funciones independientes para el dibujo de cada letra para modularidad y fácil mantenimiento.
-- Se priorizó la precisión del movimiento ajustando velocidades lineales, angulares y duraciones.
-
----
-
 ## Funcionamiento general
 
 - Ejecutar el script `move_turtle.py`.
