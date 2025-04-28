@@ -149,3 +149,6 @@ flowchart TD
     D --> H
     F --> J
 ```
+## Video demostrativo
+
+[![Ver en YouTube](https://img.youtube.com/vi/LXQKWHmdxyU/0.jpg)](https://youtu.be/LXQKWHmdxyU)
