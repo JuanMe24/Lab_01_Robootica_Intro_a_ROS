@@ -54,6 +54,17 @@ colcon build
 source install/setup.bash
 ```
 
+## Estructura del paquete
+
+my_turtle_controller/
+├── my_turtle_controller/
+│   ├── __init__.py
+│   ├── move_turtle.py    # Control con flechas
+│   └── move_turtlelab.py # Dibujo de letras
+├── setup.py              # Configuración del paquete
+├── package.xml
+└── README.md
+
 ## Ejecución
 
 Antes de correr los nodos, abre el simulador:
@@ -146,3 +157,15 @@ Aquí tienes un diagrama de flujo que representa la lógica de ambos nodos:
             │
             └── No → Finalizar Nodo
 ```
+
+## Diagrama de flujo del sistema
+
+flowchart TD
+    A[Iniciar Nodo] --> B{¿Cuál nodo?}
+    B -- move_turtle --> C[Escuchar flechas del teclado]
+    C --> D[Publicar comando de movimiento]
+    D --> C
+    B -- move_turtlelab --> E[Escuchar letras del teclado]
+    E -- m,a,h,j,d --> F[Ejecutar secuencia de movimientos]
+    F --> E
+    E -- q --> G[Finalizar nodo]
