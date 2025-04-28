@@ -122,62 +122,7 @@ Este nodo:
 
 ---
 
-## Diagrama de Flujo General
-
-Aquí tienes un diagrama de flujo que representa la lógica de ambos nodos:
-
-```plaintext
-┌──────────────┐
-│ Iniciar Nodo │
-└──────┬───────┘
-       │
-       ▼
-┌──────────────────────────┐
-│ Iniciar Hilo de Teclado   │
-└──────┬───────────────────┘
-       │
-       ▼
-┌─────────────────────────────────────────────┐
-│ Esperar Entrada de Teclado                   │
-│ (Flechas o Letras según el nodo)              │
-└──────┬───────────────────────────────────────┘
-       │
-       ▼
-┌─────────────────────────────────────────────┐
-│ Si Flechas → Actualizar Velocidades          │
-│ Si Letras  → Ejecutar Secuencia de Movimientos│
-└──────┬───────────────────────────────────────┘
-       │
-       ▼
-┌──────────────────────────┐
-│ Publicar Mensaje Twist    │
-└──────┬───────────────────┘
-       │
-       ▼
-┌─────────────────────────────┐
-│ ¿Continuar o Finalizar Nodo? │
-└───────────┬─────────────────┘
-            │
-            ├── Sí → Volver a esperar teclado
-            │
-            └── No → Finalizar Nodo
-```
-
-## Diagrama de Flujo Interno del Sistema
-
-```mermaid
-flowchart TD
-    A[Iniciar Nodo] --> B{¿Cuál nodo?}
-    B -- move_turtle --> C[Escuchar flechas del teclado]
-    C --> D[Publicar comando de movimiento]
-    D --> C
-    B -- move_turtlelab --> E[Escuchar letras del teclado]
-    E -- m,a,h,j,d --> F[Ejecutar secuencia de movimientos]
-    F --> E
-    E -- q --> G[Finalizar nodo]
-```
-
-## Diagrama de Flujo del Sistema
+## Diagrama de Flujo interno del Sistema
 
 ```mermaid
 flowchart TD
