@@ -59,16 +59,18 @@ colcon build
 source install/setup.bash
 ```
 
-## Estructura del paquete
+## Estructura del Paquete
 
+```
 my_turtle_controller/
 ├── my_turtle_controller/
 │   ├── __init__.py
-│   ├── move_turtle.py    # Control con flechas
-│   └── move_turtlelab.py # Dibujo de letras
-├── setup.py              # Configuración del paquete
-├── package.xml
-└── README.md
+│   ├── move_turtle.py        # Nodo para control con flechas
+│   └── move_turtlelab.py      # Nodo para dibujo de letras
+├── setup.py                  # Configuración del paquete
+├── package.xml               # Información del paquete para ROS
+└── README.md                 # Documentación del proyecto
+```
 
 ## Ejecución
 
