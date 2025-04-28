@@ -176,3 +176,29 @@ flowchart TD
     F --> E
     E -- q --> G[Finalizar nodo]
 ```
+
+## Diagrama de Flujo del Sistema
+
+```mermaid
+flowchart TD
+    A[Iniciar Nodo] --> B{¿Cuál nodo?}
+    
+    B -- move_turtle --> C[Escuchar flechas del teclado]
+    C --> D[Publicar comando de movimiento a /turtle1/cmd_vel]
+    D --> C
+
+    B -- move_turtlelab --> E[Escuchar letras del teclado]
+    E -- m,a,h,j,d --> F[Ejecutar secuencia de movimientos]
+    F --> E
+    E -- q --> G[Finalizar nodo]
+
+    %% Diagrama de comunicaciones ROS
+    H[/turtlesim_letter_drawer/] --> I[/turtle1/cmd_vel/]
+    J[/turtle_controller/] --> I
+    I --> K[/turtle1/]
+    K --> L[/turtlesim/]
+
+    %% Conexión entre el flujo principal y nodos ROS
+    D --> H
+    F --> J
+```
