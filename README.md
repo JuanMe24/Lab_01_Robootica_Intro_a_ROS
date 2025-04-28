@@ -35,120 +35,114 @@ El objetivo principal fue desarrollar un único script que gestionara completame
 
 ---
 
-## Funcionamiento general
+# my_turtle_controller
 
-- Ejecutar el script `move_turtle.py`.
-- La tortuga puede ser controlada inmediatamente:
-  - Usar flechas para moverse manualmente.
-  - Pulsar una de las letras (`m`, `a`, `c`, `j`, `d`, `h`) para que la tortuga dibuje automáticamente la letra correspondiente.
-- Pulsar `q` para salir del programa de forma segura.
+Este paquete de ROS 2 permite controlar una tortuga en el simulador **Turtlesim** de dos maneras:
+
+- **Mediante las flechas del teclado** (control manual en tiempo real).
+- **Mediante letras específicas** que ejecutan trayectorias predefinidas para dibujar las letras **M**, **A**, **H**, **J** y **D**.
+
+## Instalación
+
+Clona el repositorio dentro de tu `workspace/src` y compílalo:
+
+```bash
+cd ~/ros2_ws/src
+git clone <url_del_repositorio>
+cd ~/ros2_ws
+colcon build
+source install/setup.bash
+```
+
+## Ejecución
+
+Antes de correr los nodos, abre el simulador:
+
+```bash
+ros2 run turtlesim turtlesim_node
+```
+
+Luego ejecuta uno de los siguientes nodos:
+
+- Para mover la tortuga con **flechas**:
+
+```bash
+ros2 run my_turtle_controller move_turtle
+```
+
+- Para dibujar **letras** presionando teclas:
+
+```bash
+ros2 run my_turtle_controller move_turtlelab
+```
+
+## Estructura de Archivos
+
+- `setup.py`: Define la configuración del paquete y registra los scripts de los nodos.
+- `move_turtle.py`: Nodo que permite mover la tortuga usando las flechas del teclado.
+- `move_turtlelab.py`: Nodo que permite dibujar letras mediante combinaciones de movimientos de la tortuga al presionar teclas específicas.
 
 ---
 
-## Código principal (estructura básica)
+## Explicación del Funcionamiento
 
-```python
-import rclpy
-from rclpy.node import Node
-from geometry_msgs.msg import Twist
-import sys
-import termios
-import tty
-import threading
-import time
+### `move_turtle.py` - Control por Flechas
 
-class TurtlesimLetterDrawer(Node):
-    def __init__(self):
-        super().__init__('turtlesim_letter_drawer')
-        self.publisher = self.create_publisher(Twist, '/turtle1/cmd_vel', 10)
-        self.running = True
-        thread = threading.Thread(target=self.key_listener)
-        thread.start()
+Este nodo:
+- Publica mensajes `Twist` en el tópico `/turtle1/cmd_vel`.
+- Escucha las teclas presionadas (`arriba`, `abajo`, `izquierda`, `derecha`) usando hilos y terminal en modo cbreak.
+- Asocia cada flecha a un movimiento lineal o angular de la tortuga:
+  - ↑ (Arriba): Avanza.
+  - ↓ (Abajo): Retrocede.
+  - → (Derecha): Gira a la derecha.
+  - ← (Izquierda): Gira a la izquierda.
 
-    def key_listener(self):
-        old_settings = termios.tcgetattr(sys.stdin)
-        tty.setcbreak(sys.stdin.fileno())
-        try:
-            while self.running:
-                key = sys.stdin.read(1)
-                msg = Twist()
-                if key == '\x1b':  # Detectar flechas
-                    if sys.stdin.read(1) == '[':
-                        arrow_key = sys.stdin.read(1)
-                        if arrow_key == 'A':
-                            msg.linear.x = 2.0
-                        elif arrow_key == 'B':
-                            msg.linear.x = -2.0
-                        elif arrow_key == 'C':
-                            msg.angular.z = -2.0
-                        elif arrow_key == 'D':
-                            msg.angular.z = 2.0
-                        self.publisher.publish(msg)
-                elif key == 'm':
-                    self.draw_m()
-                elif key == 'a':
-                    self.draw_a()
-                elif key == 'c':
-                    self.draw_c()
-                elif key == 'j':
-                    self.draw_j()
-                elif key == 'd':
-                    self.draw_d()
-                elif key == 'h':
-                    self.draw_h()
-                elif key == 'q':
-                    self.running = False
-        finally:
-            termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
+### `move_turtlelab.py` - Dibujo de Letras
 
-    def move(self, linear=0.0, angular=0.0, duration=1.0):
-        msg = Twist()
-        msg.linear.x = linear
-        msg.angular.z = angular
-        self.publisher.publish(msg)
-        time.sleep(duration)
-        self.stop()
+Este nodo:
+- Permite al usuario presionar teclas específicas (`m`, `a`, `h`, `j`, `d`) para que la tortuga dibuje letras en pantalla.
+- Cada letra tiene su propia **secuencia de movimientos** programada (combinación de translaciones y rotaciones controladas).
+- Usa hilos para escuchar la entrada del teclado sin bloquear el hilo principal de ROS.
 
-    def stop(self):
-        msg = Twist()
-        self.publisher.publish(msg)
-        time.sleep(0.2)
+---
 
-    # Ejemplo de funciones de dibujo (se definen similarmente todas las letras)
-    def draw_m(self):
-        # Código para dibujar la letra M
-        pass
+## Diagrama de Flujo General
 
-    def draw_a(self):
-        # Código para dibujar la letra A
-        pass
+Aquí tienes un diagrama de flujo que representa la lógica de ambos nodos:
 
-    def draw_c(self):
-        # Código para dibujar la letra C
-        pass
-
-    def draw_j(self):
-        # Código para dibujar la letra J
-        pass
-
-    def draw_d(self):
-        # Código para dibujar la letra D
-        pass
-
-    def draw_h(self):
-        # Código para dibujar la letra H
-        pass
-
-def main(args=None):
-    rclpy.init(args=args)
-    node = TurtlesimLetterDrawer()
-    try:
-        rclpy.spin(node)
-    except KeyboardInterrupt:
-        pass
-    node.running = False
-    node.destroy_node()
-    rclpy.shutdown()
-
-if __name__ == '__main__':
-    main()
+```plaintext
+┌──────────────┐
+│ Iniciar Nodo │
+└──────┬───────┘
+       │
+       ▼
+┌──────────────────────────┐
+│ Iniciar Hilo de Teclado   │
+└──────┬───────────────────┘
+       │
+       ▼
+┌─────────────────────────────────────────────┐
+│ Esperar Entrada de Teclado                   │
+│ (Flechas o Letras según el nodo)              │
+└──────┬───────────────────────────────────────┘
+       │
+       ▼
+┌─────────────────────────────────────────────┐
+│ Si Flechas → Actualizar Velocidades          │
+│ Si Letras  → Ejecutar Secuencia de Movimientos│
+└──────┬───────────────────────────────────────┘
+       │
+       ▼
+┌──────────────────────────┐
+│ Publicar Mensaje Twist    │
+└──────┬───────────────────┘
+       │
+       ▼
+┌─────────────────────────────┐
+│ ¿Continuar o Finalizar Nodo? │
+└───────────┬─────────────────┘
+            │
+            ├── Sí → Volver a esperar teclado
+            │
+            └── No → Finalizar Nodo
+```
