@@ -1,6 +1,11 @@
 # Lab_01_Robootica_Intro_a_ROS
 ## Proyecto: Control de Tortuga en Turtlesim
 
+## Integrantes del Grupo
+
+- **Juan David Meza Criollo**
+- **Andrés Mauricio Avilan Herrera**
+
 ## Descripción general
 
 Este proyecto consiste en controlar una tortuga en el simulador `turtlesim` usando Python y ROS2.  
@@ -158,8 +163,9 @@ Aquí tienes un diagrama de flujo que representa la lógica de ambos nodos:
             └── No → Finalizar Nodo
 ```
 
-## Diagrama de flujo del sistema
+## Diagrama de Flujo Interno del Sistema
 
+```mermaid
 flowchart TD
     A[Iniciar Nodo] --> B{¿Cuál nodo?}
     B -- move_turtle --> C[Escuchar flechas del teclado]
@@ -169,3 +175,4 @@ flowchart TD
     E -- m,a,h,j,d --> F[Ejecutar secuencia de movimientos]
     F --> E
     E -- q --> G[Finalizar nodo]
+```
